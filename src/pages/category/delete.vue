@@ -3,6 +3,7 @@
     title="提示"
     :visible="visible"
     width="30%"
+    @close="back"
     center>
     <span>你确定要删除吗</span>
     <span slot="footer" class="dialog-footer">
@@ -13,11 +14,14 @@
 </template>
 <script>
 export default {
-    props:['ids'],
     data () {
         return {
-            visible: true
+            visible: true,
+            ids: 0
         }
+    },
+    beforeMount () {
+        this.ids = this.$route.query.id
     },
     methods: {
         back () {
@@ -25,10 +29,22 @@ export default {
             this.$router.go(-1)
         },
         remove () {
-            let ids = this.$route.query.id
+            
             // ajax 删除
-            this.visible = false
-            this.$router.go(-1)
+            this.axios.delete('/api/category/delete', {
+                params: {
+                    id: this.ids
+                }
+            }).then ((data) => {
+                if (data.data.code == 0) {
+                    this.$alert('删除成功', '提示')
+                    this.$router.go(-1)
+                } else {
+                    this.$alert(data.data.msg, '提示')
+                }
+            }).catch(() => {
+                this.$alert('网络错误请稍后重试', '提示')
+            })
         }
     }
 }

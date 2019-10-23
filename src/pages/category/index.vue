@@ -1,6 +1,6 @@
 <template>
     <div>
-        <subnav style="margin:10px 0;" :ids="checkedids"></subnav>
+        <subnav style="margin-bottom:10px;" :ids="checkedids"></subnav>
         <el-table
         :data="tableData"
         tooltip-effect="dark"
@@ -63,13 +63,20 @@ export default {
             pageSize: 10,
             totalRows: 10,
             pageSizes: [10, 15, 20],
-            checkedids: []
+            checkedids: [],
+            loading: ''
         }
     },
     filters: {
         timeformate
     },
     beforeMount () {
+        this.loading = this.$loading({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+        })
         this.getData()
     },
     components: {
@@ -103,7 +110,9 @@ export default {
                     this.totalPages = dataInfo.totalpages
                     this.pageSize = parseInt(dataInfo.pagesize)
                     this.totalRows = dataInfo.totalrows
+                    this.loading.close()
                 }).catch((error) => {
+                    this.loading.close()
                     console.log(error)
                 })
         },
@@ -115,6 +124,13 @@ export default {
                 })
             }
             this.checkedids = curids
+        }
+    },
+    watch: {
+        $route (to, from) {
+            if (to.path == '/category/index') {
+                 this.getData()
+            }
         }
     }
 }
