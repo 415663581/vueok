@@ -1,6 +1,6 @@
 <template>
     <el-dialog title="管理员权限修改" :visible="visible" @close="back" width="40%">
-        <el-form ref="create" :model="form"  :ref="form" :rules="rules" label-width="120px">
+        <el-form ref="create" :model="form" :rules="rules" label-width="120px">
             <el-row>
                 <el-col :span="16">
                     <el-form-item label="管理名称" prop="rolename">
@@ -9,19 +9,16 @@
                                 <el-option :value="item.id" :label="item.rolename" :key="key"></el-option>
                             </template>
                         </el-select>
+                    </el-form-item>  
+                    <el-form-item label="管理员姓名" prop="username">
+                        <el-input v-model="form.username"></el-input>
                     </el-form-item>
-                    <el-form-item label="管理员编号" prop="roleid">
+                     <el-form-item label="管理员权限" prop="roleid">
                         <el-select v-model="form.roleid" >
                             <template v-for="(item, key) in listdata">
                                 <el-option :value="item.id" :label="item.roleid" :key="key"> </el-option>
                             </template>
                         </el-select>
-                    </el-form-item>
-                    <el-form-item label="管理员姓名" prop="username">
-                        <el-input v-model="form.username"></el-input>
-                    </el-form-item>
-                    <el-form-item label="管理员权限" prop="userpassword">
-                        
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="submitform">立即创建</el-button>
@@ -91,13 +88,15 @@ export default {
             this.$router.push('/admin/index')
         },
         submitform () {
-            this.$refs[form].validate((valid) => {
+            this.$refs.create.validate((valid) => {
                 if (valid) {
                     this.$refs.create.validate((status) => {
                         if (status) {
+                            alert(1111)
                             this.axios.post('/api/admin/edit', {
                                 params: {
-                                    userpassword: this.form.userpassword
+                                    userpassword: this.form.userpassword,
+                                    roleid: this.form.roleid
                                 }
                             }).then((data) => {
                                 if (data.data.code === 0) {

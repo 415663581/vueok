@@ -1,6 +1,6 @@
 <template>
     <el-dialog title="管理员密码修改" :visible="visible" @close="back" width="40%">
-        <el-form ref="create" :model="form"  :ref="form" :rules="rules" label-width="120px">
+        <el-form ref="create" :model="form" :rules="rules" label-width="120px">
             <el-row>
                 <el-col :span="16">
                     <el-form-item label="管理名称" prop="rolename">
@@ -43,18 +43,18 @@ export default {
             callback(new Error('请输入密码'));
             } else {
             if (this.form.checkPass !== '') {
-                this.$refs.form.validateField('checkPass');
+                this.$refs.create.validateField('checkPass');
             }
             callback();
             }
         }
         var validatePass2 = (rule, value, callback) => {
             if (value === '') {
-            callback(new Error('请再次输入密码'));
+                callback(new Error('请再次输入密码'));
             } else if (value !== this.form.userpassword) {
-            callback(new Error('两次输入密码不一致!'));
+                callback(new Error('两次输入密码不一致!'));
             } else {
-            callback();
+                callback();
             }
         }
         return {
@@ -70,7 +70,7 @@ export default {
             rules: {
                 userpassword: [
                     
-                     { validator: validatePass2, trigger: 'blur' }
+                    { validator: validatePass2, trigger: 'blur' }
                 ],
                 checkPass: [
                     { validator: validatePass2, trigger: 'blur' }
@@ -122,7 +122,7 @@ export default {
             this.$router.push('/admin/index')
         },
         submitform () {
-            this.$refs[form].validate((valid) => {
+            this.$refs.create.validate((valid) => {
                 if (valid) {
                     this.$refs.create.validate((status) => {
                         if (status) {

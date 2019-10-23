@@ -116,12 +116,11 @@ export default {
                         }
                     }).then((data) => {
                         if (data.data.code === 0) {
-                            this.$router.go(-1) 
-                        } else {
+                        }else {
                             this.$alert(data.data.msg, '提示')
                         }
-                         this.$router.go(-1)
-                    }).catch(() => {
+                        this.$router.go(-1)
+                    }).catch((error) => {
                         this.$alert('网络错误请稍后重试', '提示')
                     })
                 }
