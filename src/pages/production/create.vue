@@ -54,16 +54,13 @@
                     </el-form-item>
                     
                     <el-form-item label="产品参数" prop="productionparam">
-                         <template v-for="(item, index) in form.productionparam">
-                            <el-row :key="index" style="width:300px;">
-                                <el-col :span="8"  style="margin-left:4px;">
-                                    <el-input v-model="item['key']"></el-input>
-                                </el-col>
+                         <!-- <template v-for="(item, key) in form.productionparam">
+                            <el-row :key="key" style="width:300px;">
                                 <el-col :span="8"  style="margin-left:4px;">
                                     <el-input v-model="item['value']"></el-input>
                                 </el-col>
-                            </el-row>
-                        </template>
+                            </el-row> 
+                        </template>-->
                         <el-button-group>
                             <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addparams"></el-button>
                             <el-button type="primary" icon="el-icon-remove-outline"  @click="removeparams"></el-button>
@@ -100,110 +97,109 @@ export default {
                 productionphoto: '',
                 productionsize: [''],
                 productioncolor: [''],
-                productionparam: [{key:'1', value:'2'}],
+                productionparam: [{key:'',value:''}],
                 productiondesc: '',
                 allowmodule: []
             },
-            rules: {
-                categoryid: [
-                    {
-                        required: true,
-                        validator: (rule,value,callback) => {
-                            if (value === "") {
-                                this.active = "base"
-                                callback(new Error('分类不能为空'))
-                            }
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                productiontitle: [
-                    {
-                        required: true,
-                        validator: (rule,value,callback) => {
-                            if (value.length < 2 || value.length > 30) {
-                                this.active = "base"
-                                callback(new Error('产品标题必须在2到30个字符之间'))
-                            }
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                productionprice: [
-                    {
-                        required: true,
-                        validator: (rule,value,callback) => {
-                            if (value == 0.00) {
-                                this.active = "base"
-                                callback(new Error('产品价格不能为0'))
-                            }
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                productionphoto: [
-                    {
-                        required: true,
-                        validator: (rule,value,callback) => {
-                            if (value === "") {
-                                this.active = "base"
-                                callback(new Error('产品图片不能为为空'))
-                            }
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                productionsize: [
-                    {
-                        required: true,
-                        validator: (rule,value,callback) => {
-                            if (value == '') {
-                                this.active = "params"
-                                callback(new Error('产品尺码不能为空'))
-                            }
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                productioncolor: [
-                    {
-                        required: true,
-                        validator: (rule,value,callback) => {
-                            if (value == '') {
-                                this.active = "params"
-                                callback(new Error('产品颜色不能为空'))
-                            }
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                productionparam: [
-                    {
-                        required: true,
-                        validator: (rule,value,callback) => {
-                            if (value.length < 1) {
-                                this.active = "params"
-                                callback(new Error('产品颜色不能为空'))
-                            } else {
-                                callback()
-                            }
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                productiondesc: [
-                    {
-                        required: true,
-                        validator: (rule,value,callback) => {
-                            if (value === '') {
-                                this.active = "detail"
-                                callback(new Error('产品内容不能为空'))
-                            }
-                        },
-                        trigger: 'blur'
-                    }
-                ]
-            }
+            // rules: {
+            //     categoryid: [
+            //         {
+            //             required: true,
+            //             validator: (rule,value,callback) => {
+            //                 if (value === "") {
+            //                     this.active = "base"
+            //                     callback(new Error('分类不能为空'))
+            //                 }
+            //             },
+            //             trigger: 'blur'
+            //         }
+            //     ],
+            //     productiontitle: [
+            //         {
+            //             required: true,
+            //             validator: (rule,value,callback) => {
+            //                 if (value.length < 2 || value.length > 30) {
+            //                     this.active = "base"
+            //                     callback(new Error('产品标题必须在2到30个字符之间'))
+            //                 }
+            //             },
+            //             trigger: 'blur'
+            //         }
+            //     ],
+            //     productionprice: [
+            //         {
+            //             required: true,
+            //             validator: (rule,value,callback) => {
+            //                 if (value == 0.00) {
+            //                     this.active = "base"
+            //                     callback(new Error('产品价格不能为0'))
+            //                 }
+            //             },
+            //             trigger: 'blur'
+            //         }
+            //     ],
+            //     productionphoto: [
+            //         {
+            //             required: true,
+            //             validator: (rule,value,callback) => {
+            //                 if (value === "") {
+            //                     this.active = "base"
+            //                     callback(new Error('产品图片不能为为空'))
+            //                 }
+            //             },
+            //             trigger: 'blur'
+            //         }
+            //     ],
+            //     productionsize: [
+            //         {
+            //             required: true,
+            //             validator: (rule,value,callback) => {
+            //                 if (value == '') {
+            //                     this.active = "params"
+            //                     callback(new Error('产品尺码不能为空'))
+            //                 }
+            //             },
+            //             trigger: 'blur'
+            //         }
+            //     ],
+            //     productioncolor: [
+            //         {
+            //             required: true,
+            //             validator: (rule,value,callback) => {
+            //                 if (value == '') {
+            //                     this.active = "params"
+            //                     callback(new Error('产品颜色不能为空'))
+            //                 }
+            //             },
+            //             trigger: 'blur'
+            //         }
+            //     ],
+            //     productionparam: [
+            //         {
+            //             required: true,
+            //             validator: (rule,value,callback) => {
+            //                     if (value.length < 1) {
+            //                         this.active = "params"
+            //                         callback(new Error('属性名不能为空'))
+            //                     }
+                           
+            //             },
+            //             trigger: 'blur'
+            //         }
+            //     ],
+            //     productiondesc: [
+            //         {
+            //             required: true,
+            //             validator: (rule,value,callback) => {
+            //                 if (value === '') {
+            //                     this.active = "detail"
+            //                     callback(new Error('产品内容不能为空'))
+            //                 }
+            //             },
+            //             trigger: 'blur'
+            //         }
+            //     ]
+            // }
         }
     },
     components: {
@@ -231,7 +227,7 @@ export default {
             }
         },
         addparams () {
-            this.form.productionparam.push({ key: "", value: "" });
+            this.form.productionparam.push(['', ''])
         },
         removeparams () {
             if (this.form.productionparam.length > 1) {
@@ -251,7 +247,7 @@ export default {
         },
         back () {
             this.visible = false
-            this.$router.push('/role/index')
+            this.$router.push('/production/index')
         },
         submitform () {
             this.$refs.create.validate((status) => {
@@ -260,9 +256,10 @@ export default {
                     let paramsArr = this.form.productionparam
                     let paramsString = ''
                     paramsArr.forEach ((item) => {
-                        paramsString += item['key'] + ':' +item['value'] + ';'
+                        paramsString += item[0] + ':' +item[1] + ';'
                     })
-                    let submitData = {
+                    this.axios.post('/api/production/create',{
+                        params:{
                         categoryid: this.form.categoryid,
                         productiontitle: this.form.productiontitle,
                         productionprice: this.form.productionprice,
@@ -271,12 +268,20 @@ export default {
                         productioncolor: this.form.productioncolor.join('-'),
                         productionparam: paramsString,
                         productiondesc: this.form.productiondesc
-                    }
-                    console.log(submitData)
-
-                } else {
-                    alert('验证错误')
-                }
+                        }
+                       
+                    }).then((data) => {
+                        if (data.data.code === 0) {
+                            this.$alert('添加成功', '提示')
+                            this.$router.go(-1)
+                        } else {
+                            this.$alert(data.data.msg, '提示')
+                        }
+                    }).catch(() => {
+                        this.$alert('网络错误请稍后重试', '提示')
+                    })
+                
+                } 
             })
         },
         editfinished (content) {

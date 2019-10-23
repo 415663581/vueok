@@ -31,7 +31,7 @@ export default {
         remove () {
             
             // ajax 删除
-            this.axios.delete('/api/role/delete', {
+            this.axios.delete('/api/production/delete', {
                 params: {
                     id: this.ids
                 }
