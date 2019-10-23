@@ -1,0 +1,11 @@
+html,body{
+    height: 100%;
+}
+body{
+    margin: 0;
+    background-color: #f6f6f6;
+    background: url('/static/images/bg.jpg') repeat-x left cener;
+}
+#app{
+    height: 100%;
+}
