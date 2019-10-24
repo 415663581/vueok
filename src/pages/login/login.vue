@@ -10,7 +10,7 @@
                     <el-input type="password" v-model="form.userpassword"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="submitform" :loading="loading">立即创建</el-button>
+                    <el-button type="primary" @click="submitform" :loading="loading">登录</el-button>
                     <el-button>取消</el-button>
                 </el-form-item>
             </el-form>
@@ -40,6 +40,7 @@ export default {
     },
     methods: {
         submitform () {
+            this.loading = true
             this.$refs.login.validate((status) => {
                 if (status) {
                     this.axios.get('/api/admin/checkLogin',
@@ -59,16 +60,18 @@ export default {
                             })
                             this.$router.push('/')
                         } else {
+                            this.loading = false
                             this.$alert(data.data.msg, '错误提示', {
                                 confirmButtonText: '确定'
                             })
                         }
                     }).catch((error) => {
-                        console.log(error)
+                        this.loading = false
+                        this.$alert('网络错误，请重试', '错误提示', {
+                            confirmButtonText: '确定'
+                        })
                     })
-                } else {
-                    console.log(status)
-                }
+                } 
             })
         }
     }

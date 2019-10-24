@@ -23,8 +23,17 @@ export default {
             this.$router.back()
         },
         logout () {
-            this.$store.commit('logout')
-            this.$router.push('/login')
+            this.axios.get('/api/common/cleartoken')
+            .then((response) => {
+                if (response.data.code == 0) {
+                    this.$store.commit('logout');
+                    this.$router.push('/login');
+                } else {
+                    this.$alert(response.data.msg, '提示')
+                }
+            }).catch(function (error) {
+                this.$alert('服务器繁忙，请稍后重试', '提示')
+            })
         }
     }
 }

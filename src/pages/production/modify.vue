@@ -1,6 +1,6 @@
 <template>
     <el-dialog title="角色添加" :visible="visible" @close="back" width="70%">
-        <el-form ref="create" :model="form"  label-width="80px">
+        <el-form ref="create" :model="form" :rules="rules" label-width="100px">
             <el-tabs :tab-position="'left'" style="height: 430px;" v-model="active">
                 <el-tab-pane label="基本信息" name="base">
                     <el-row :gutter="10">
@@ -22,18 +22,8 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                        <el-table-column
-                        label="产品图片"
-                        width="100">
-                            <template slot-scope="scope">
-                                <div style="width:40px; height:30px; overflow:hidden">
-                                <img :src="scope.row.productionphoto" width="100%"/>
-                                </div>
-                            </template>
-                        </el-table-column>
                             <el-form-item label="产品图片" prop="productionphoto">
-                                <uploads :productionphoto="form.productionphoto" 
-                                @uploaded="uploaded"></uploads>
+                                <uploads :productionphoto="form.productionphoto" @uploaded="uploaded"></uploads>
                                 <input type="hidden" v-model="form.productionphoto">
                             </el-form-item>
                         </el-col>
@@ -63,7 +53,7 @@
                         </el-button-group>
                     </el-form-item>
                     
-                    <!-- <el-form-item label="产品参数" prop="productionparam">
+                    <el-form-item label="产品参数" prop="productionparam">
                          <template v-for="(item, key) in form.productionparam">
                             <el-row :key="key" style="width:300px;">
                                 <el-col :span="8"  style="margin-left:4px;">
@@ -72,13 +62,13 @@
                                 <el-col :span="8"  style="margin-left:4px;">
                                     <el-input v-model="item['value']"></el-input>
                                 </el-col>
-                            </el-row>
+                            </el-row> 
                         </template>
                         <el-button-group>
                             <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addparams"></el-button>
                             <el-button type="primary" icon="el-icon-remove-outline"  @click="removeparams"></el-button>
                         </el-button-group>
-                    </el-form-item> -->
+                    </el-form-item>
                 </el-tab-pane>
                 <el-tab-pane label="产品详情" name="detail">
                     <el-form-item label="内容详情" prop="productiondesc">
@@ -103,6 +93,7 @@ export default {
             visible: true,
             allCategory: [],
             active: 'base',
+            id:'',
             form: {
                 categoryid: '',
                 productiontitle: '',
@@ -110,21 +101,133 @@ export default {
                 productionphoto: '',
                 productionsize: [''],
                 productioncolor: [''],
-                productionparam: [{key:'',value:''}],
+                productionparam: [{key:'', value:''}],
                 productiondesc: '',
                 allowmodule: []
             },
+            rules: {
+                categoryid: [
+                    {
+                        required: true,
+                        validator: (rule,value,callback) => {
+                            if (value === "") {
+                                this.active = "base"
+                                callback(new Error('分类不能为空'))
+                            } else {
+                                callback()
+                            }
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                productiontitle: [
+                    {
+                        required: true,
+                        validator: (rule,value,callback) => {
+                            if (value.length < 2 || value.length > 30) {
+                                this.active = "base"
+                                callback(new Error('产品标题必须在2到30个字符之间'))
+                            } else {
+                                callback()
+                            }
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                productionprice: [
+                    {
+                        required: true,
+                        validator: (rule,value,callback) => {
+                            if (value == 0.00) {
+                                this.active = "base"
+                                callback(new Error('产品价格不能为0'))
+                            } else {
+                                callback()
+                            }
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                productionphoto: [
+                    {
+                        required: true,
+                        validator: (rule,value,callback) => {
+                            if (value === "") {
+                                this.active = "base"
+                                callback(new Error('产品图片不能为为空'))
+                            } else {
+                                callback()
+                            }
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                productionsize: [
+                    {
+                        required: true,
+                        validator: (rule,value,callback) => {
+                            if (value == '') {
+                                this.active = "params"
+                                callback(new Error('产品尺码不能为空'))
+                            } else {
+                                callback()
+                            }
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                productioncolor: [
+                    {
+                        required: true,
+                        validator: (rule,value,callback) => {
+                            if (value == '') {
+                                this.active = "params"
+                                callback(new Error('产品颜色不能为空'))
+                            } else {
+                                callback()
+                            }
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                productionparam: [
+                    { required: true, message: "产品参数不能为空", trigger: "blur" },
+                    {
+                        validator: (rule, value, callback) => {
+                            if (value.length < 1) {
+                                this.activeName = "params";
+                                callback(new Error("产品参数不能为空"));
+                            } else {
+                                callback();
+                            }
+                        },
+                        trigger: "blur"
+                    }
+                ],
+                productiondesc: [
+                    {
+                        required: true,
+                        validator: (rule,value,callback) => {
+                            if (value === '') {
+                                this.active = "detail"
+                                callback(new Error('产品内容不能为空'))
+                            } else {
+                                callback()
+                            }
+                        },
+                        trigger: 'blur'
+                    }
+                ]
+            }
         }
     },
     components: {
         uploads,
         editor
     },
-    created () {
+    beforeMount () {
+        this.id  = this.$route.query.id[0]
         this.getCategoryData()
-    },
-    mounted () {
-        this.getData()
     },
     methods: {
         addsize () {
@@ -143,18 +246,23 @@ export default {
                 this.form.productioncolor.pop()
             }
         },
-        // addparams () {
-        //     this.form.productionparam.push(['', ''])
-        // },
-        // removeparams () {
-        //     if (this.form.productionparam.length > 1) {
-        //         this.form.productionparam.pop()
-        //     }
-        // },
+        addparams () {
+            this.form.productionparam.push(['', ''])
+        },
+        removeparams () {
+            if (this.form.productionparam.length > 1) {
+                this.form.productionparam.pop()
+            }
+        },
         getCategoryData () {
             this.axios.get('/api/category/getAllData')
             .then((data) => {
-                this.allCategory = data.data.data
+                if (data.data.code === 0) {
+                    this.allCategory = data.data.data
+                    this.getData()
+                } else {
+                    this.$alert('网络错误请稍后重试', '提示')
+                }
             }).catch((errr) => {
                 this.$alert('网络错误请稍后重试', '提示')
             })
@@ -169,61 +277,80 @@ export default {
         getData () {
             this.axios.get('/api/production/getRow', {
                 params: {
-                    id: this.$route.query.id[0]
+                    id: this.id
                 }
             }).then((data) => {
-                alert(data.data.code)
                 if (data.data.code === 0) {
+                    console.log(data.data.data)
+                    let paramsArr = []
+                    if (data.data.data['productionparams'] !== '' ) {
+                        let paramsStringArr = (data.data.data['productionparams'] || "").split(';')
+                        paramsStringArr.forEach ((item) => {
+                            let curparams = item.split(':')
+                            paramsArr.push({key:curparams[0], value:curparams[1]})
+                        })
+                    } 
                     this.form.categoryid = data.data.data['categoryid']
                     this.form.productiontitle = data.data.data['productiontitle']
                     this.form.productionprice = data.data.data['productionprice']
                     this.form.productionphoto = data.data.data['productionphoto']
-                    this.form.productionsize = data.data.data['productionsize'].split('-')
-                    this.form.productioncolor = data.data.data['productioncolor'].split('-')
-                    //this.form.productionparam = paramsArr
+                    this.form.productionsize = (data.data.data['productionsize']).split('-')
+                    this.form.productioncolor = (data.data.data['productioncolor']).split('-')
+                    if (paramsArr.length > 0) {
+                        this.form.productionparam = paramsArr
+                    }
                     this.form.productiondesc = data.data.data['productiondesc']
-                    console.log(this.form)
+                    console.log(this.form.productionphoto)
                 } else {
                     this.$alert(data.data.msg, '提示')
                     this.$router.back()
                 }
             }).catch((error) => {
-                    this.$alert('网络错误请稍后重试', '提示')
-                    this.$router.back()
+                console.log(error)
+                this.$alert('网络错误请稍后重试', '提示')
+                this.$router.back()
             })
         },
-         submitform () {
+        submitform () {
             this.$refs.create.validate((status) => {
-                alert(status)
                 if (status) {
+                    let paramsArr = this.form.productionparam
+                    let paramsString = ''
+                    paramsArr.forEach ((item) => {
+                        paramsString += item[0] + ':' +item[1] + ';'
+                    })
                     this.axios.post('/api/production/edit',{
-                        params:{
-                        categoryid: this.form.categoryid,
-                        productiontitle: this.form.productiontitle,
-                        productionprice: this.form.productionprice,
-                        productionphoto: this.form.productionphoto,
-                        productionsize:  this.form.productionsize.join('-'),
-                        productioncolor: this.form.productioncolor.join('-'),
-                        productionparam: this.form.productionparam,
-                        productiondesc: this.form.productiondesc
-                        }
+                        params: {
+                            id:this.$id,
+                            categoryid: this.form.categoryid,
+                            productiontitle: this.form.productiontitle,
+                            productionprice: this.form.productionprice,
+                            productionphoto: this.form.productionphoto,
+                            productionsize:  this.form.productionsize.join('-'),
+                            productioncolor: this.form.productioncolor.join('-'),
+                            productionparam: paramsString,
+                            productiondesc: this.form.productiondesc
+                        }  
                     }).then((data) => {
-                        if (data.data.code == 0) {
-                            this.$alert('修改成功', '提示')
-                            this.$router.go(-1)
+                        if (data.data.code === 0) {
+                            this.$alert('修改成功', '提示', {
+                                callback: action => {
+                                   this.$router.go(-1)
+                                }
+                            })
                         } else {
                             this.$alert(data.data.msg, '提示')
                         }
-                    }).catch((error) => {
+                    }).catch(() => {
                         this.$alert('网络错误请稍后重试', '提示')
                     })
+                
                 } 
             })
         },
         editfinished (content) {
             this.form.productiondesc = content
-        },
+        }
     }
 }
 </script>
-    

@@ -1,6 +1,6 @@
 <template>
     <el-dialog title="角色添加" :visible="visible" @close="back" width="70%">
-        <el-form ref="create" :model="form" :rules="rules" label-width="80px">
+        <el-form ref="create" :model="form" :rules="rules" label-width="100px">
             <el-tabs :tab-position="'left'" style="height: 430px;" v-model="active">
                 <el-tab-pane label="基本信息" name="base">
                     <el-row :gutter="10">
@@ -54,13 +54,16 @@
                     </el-form-item>
                     
                     <el-form-item label="产品参数" prop="productionparam">
-                         <!-- <template v-for="(item, key) in form.productionparam">
+                         <template v-for="(item, key) in form.productionparam">
                             <el-row :key="key" style="width:300px;">
+                                <el-col :span="8"  style="margin-left:4px;">
+                                    <el-input v-model="item['key']"></el-input>
+                                </el-col>
                                 <el-col :span="8"  style="margin-left:4px;">
                                     <el-input v-model="item['value']"></el-input>
                                 </el-col>
                             </el-row> 
-                        </template>-->
+                        </template>
                         <el-button-group>
                             <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addparams"></el-button>
                             <el-button type="primary" icon="el-icon-remove-outline"  @click="removeparams"></el-button>
@@ -97,109 +100,124 @@ export default {
                 productionphoto: '',
                 productionsize: [''],
                 productioncolor: [''],
-                productionparam: [{key:'',value:''}],
+                productionparam: [{key:'', value:''}],
                 productiondesc: '',
                 allowmodule: []
             },
-            // rules: {
-            //     categoryid: [
-            //         {
-            //             required: true,
-            //             validator: (rule,value,callback) => {
-            //                 if (value === "") {
-            //                     this.active = "base"
-            //                     callback(new Error('分类不能为空'))
-            //                 }
-            //             },
-            //             trigger: 'blur'
-            //         }
-            //     ],
-            //     productiontitle: [
-            //         {
-            //             required: true,
-            //             validator: (rule,value,callback) => {
-            //                 if (value.length < 2 || value.length > 30) {
-            //                     this.active = "base"
-            //                     callback(new Error('产品标题必须在2到30个字符之间'))
-            //                 }
-            //             },
-            //             trigger: 'blur'
-            //         }
-            //     ],
-            //     productionprice: [
-            //         {
-            //             required: true,
-            //             validator: (rule,value,callback) => {
-            //                 if (value == 0.00) {
-            //                     this.active = "base"
-            //                     callback(new Error('产品价格不能为0'))
-            //                 }
-            //             },
-            //             trigger: 'blur'
-            //         }
-            //     ],
-            //     productionphoto: [
-            //         {
-            //             required: true,
-            //             validator: (rule,value,callback) => {
-            //                 if (value === "") {
-            //                     this.active = "base"
-            //                     callback(new Error('产品图片不能为为空'))
-            //                 }
-            //             },
-            //             trigger: 'blur'
-            //         }
-            //     ],
-            //     productionsize: [
-            //         {
-            //             required: true,
-            //             validator: (rule,value,callback) => {
-            //                 if (value == '') {
-            //                     this.active = "params"
-            //                     callback(new Error('产品尺码不能为空'))
-            //                 }
-            //             },
-            //             trigger: 'blur'
-            //         }
-            //     ],
-            //     productioncolor: [
-            //         {
-            //             required: true,
-            //             validator: (rule,value,callback) => {
-            //                 if (value == '') {
-            //                     this.active = "params"
-            //                     callback(new Error('产品颜色不能为空'))
-            //                 }
-            //             },
-            //             trigger: 'blur'
-            //         }
-            //     ],
-            //     productionparam: [
-            //         {
-            //             required: true,
-            //             validator: (rule,value,callback) => {
-            //                     if (value.length < 1) {
-            //                         this.active = "params"
-            //                         callback(new Error('属性名不能为空'))
-            //                     }
-                           
-            //             },
-            //             trigger: 'blur'
-            //         }
-            //     ],
-            //     productiondesc: [
-            //         {
-            //             required: true,
-            //             validator: (rule,value,callback) => {
-            //                 if (value === '') {
-            //                     this.active = "detail"
-            //                     callback(new Error('产品内容不能为空'))
-            //                 }
-            //             },
-            //             trigger: 'blur'
-            //         }
-            //     ]
-            // }
+            rules: {
+                categoryid: [
+                    {
+                        required: true,
+                        validator: (rule,value,callback) => {
+                            if (value === "") {
+                                this.active = "base"
+                                callback(new Error('分类不能为空'))
+                            } else {
+                                callback()
+                            }
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                productiontitle: [
+                    {
+                        required: true,
+                        validator: (rule,value,callback) => {
+                            if (value.length < 2 || value.length > 30) {
+                                this.active = "base"
+                                callback(new Error('产品标题必须在2到30个字符之间'))
+                            } else {
+                                callback()
+                            }
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                productionprice: [
+                    {
+                        required: true,
+                        validator: (rule,value,callback) => {
+                            if (value == 0.00) {
+                                this.active = "base"
+                                callback(new Error('产品价格不能为0'))
+                            } else {
+                                callback()
+                            }
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                productionphoto: [
+                    {
+                        required: true,
+                        validator: (rule,value,callback) => {
+                            if (value === "") {
+                                this.active = "base"
+                                callback(new Error('产品图片不能为为空'))
+                            } else {
+                                callback()
+                            }
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                productionsize: [
+                    {
+                        required: true,
+                        validator: (rule,value,callback) => {
+                            if (value == '') {
+                                this.active = "params"
+                                callback(new Error('产品尺码不能为空'))
+                            } else {
+                                callback()
+                            }
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                productioncolor: [
+                    {
+                        required: true,
+                        validator: (rule,value,callback) => {
+                            if (value == '') {
+                                this.active = "params"
+                                callback(new Error('产品颜色不能为空'))
+                            } else {
+                                callback()
+                            }
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                productionparam: [
+                    { required: true, message: "产品参数不能为空", trigger: "blur" },
+                    {
+                        validator: (rule, value, callback) => {
+                            if (value.length < 1) {
+                                this.activeName = "params";
+                                callback(new Error("产品参数不能为空"));
+                            } else {
+                                callback();
+                            }
+                        },
+                        trigger: "blur"
+                    }
+                ],
+                productiondesc: [
+                    {
+                        required: true,
+                        validator: (rule,value,callback) => {
+                            if (value === '') {
+                                this.active = "detail"
+                                callback(new Error('产品内容不能为空'))
+                            } else {
+                                callback()
+                            }
+                        },
+                        trigger: 'blur'
+                    }
+                ]
+            }
         }
     },
     components: {
@@ -237,7 +255,11 @@ export default {
         getCategoryData () {
             this.axios.get('/api/category/getAllData')
             .then((data) => {
-                this.allCategory = data.data.data
+                if (data.data.code === 0) {
+                    this.allCategory = data.data.data
+                } else {
+                    this.$alert('网络错误请稍后重试', '提示')
+                }
             }).catch((errr) => {
                 this.$alert('网络错误请稍后重试', '提示')
             })
@@ -260,20 +282,22 @@ export default {
                     })
                     this.axios.post('/api/production/create',{
                         params:{
-                        categoryid: this.form.categoryid,
-                        productiontitle: this.form.productiontitle,
-                        productionprice: this.form.productionprice,
-                        productionphoto: this.form.productionphoto,
-                        productionsize:  this.form.productionsize.join('-'),
-                        productioncolor: this.form.productioncolor.join('-'),
-                        productionparam: paramsString,
-                        productiondesc: this.form.productiondesc
-                        }
-                       
+                            categoryid: this.form.categoryid,
+                            productiontitle: this.form.productiontitle,
+                            productionprice: this.form.productionprice,
+                            productionphoto: this.form.productionphoto,
+                            productionsize:  this.form.productionsize.join('-'),
+                            productioncolor: this.form.productioncolor.join('-'),
+                            productionparam: paramsString,
+                            productiondesc: this.form.productiondesc
+                        }  
                     }).then((data) => {
                         if (data.data.code === 0) {
-                            this.$alert('添加成功', '提示')
-                            this.$router.go(-1)
+                            this.$alert('添加成功', '提示', {
+                                callback: action => {
+                                   this.$router.go(-1)
+                                }
+                            })
                         } else {
                             this.$alert(data.data.msg, '提示')
                         }

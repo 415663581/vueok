@@ -30,14 +30,17 @@
         <template slot-scope="scope">{{ scope.row.rolename }}</template>
         </el-table-column>
         </el-table>
-        <div class="block" >
+        <div class="block">
             <el-pagination
-            background
-            layout="prev, pager, next"
-            :totalpages="totalpages"
-            :pagesize="pagesize"
-            :currentpage="currentpage"
-            :total="totalRows">
+            layout="total, sizes, prev, pager, next, jumper"
+            :pageCount="totalPages"
+            :pageSize = "pageSize"
+            :pageSizes = "pageSizes"
+            :currentPage="currentPage"
+            :total="totalRows"
+            @current-change="currentChange"
+            @size-change="sizeChange"
+            >
             </el-pagination>
         </div>
         <router-view name="admin"/>
@@ -51,10 +54,11 @@ export default {
         return {
             tableData: [],
             visible: false,
-            currentpage: 1,
-            totalpages: 1,
-            pagesize: 10,
+            currentPage: 1,
+            totalPages: 1,
+            pageSize: 10,
             totalRows: 10,
+            pageSizes: [10, 15, 20],
             checkedids: [],
             loading: ''
         }
@@ -98,9 +102,9 @@ export default {
                 .then((data) => {
                     let dataInfo = data.data.data
                     this.tableData = dataInfo.listdata
-                    this.currentpage = parseInt(dataInfo.currentpage)
-                    this.totalpages = dataInfo.totalpages
-                    this.pagesize = parseInt(dataInfo.pagesize)
+                    this.currentPage = parseInt(dataInfo.currentpage)
+                    this.totalPages = dataInfo.totalpages
+                    this.pageSize = parseInt(dataInfo.pagesize)
                     this.totalRows = dataInfo.totalrows
                     this.loading.close()
                 }).catch((error) => {
